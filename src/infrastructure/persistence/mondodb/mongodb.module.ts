@@ -5,7 +5,9 @@ import { ImageSchema } from '../schemas/image.schema';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/image-processing'),
+    MongooseModule.forRoot(
+      'mongodb://imageroot:imageroot321.@localhost:27017/image-processing?authSource=admin',
+    ),
     MongooseModule.forFeature([
       { name: 'Task', schema: TaskSchema },
       { name: 'Image', schema: ImageSchema },
