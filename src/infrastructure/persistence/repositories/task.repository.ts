@@ -27,6 +27,13 @@ export class TaskRepository implements ITaskRepository {
     return this.toDomain(taskDoc);
   }
 
+  async findById(taskId: string): Promise<Task | null> {
+    const taskDoc = await this.taskModel.findById(taskId).populate('images');
+    if (!taskDoc) return null;
+
+    return this.toDomain(taskDoc);
+  }
+
   private toDomain(doc: TaskDocument): Task {
     return {
       taskId: doc._id.toString(),

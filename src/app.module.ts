@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PersistenceModule } from './infrastructure/persistence/persistence.module';
 import { HealthModule } from './infrastructure/health/health.module';
-import { TaskModule } from './infrastructure/task/task.module';
+import { TasksModule } from './infrastructure/task/tasks.module';
 
 @Module({
-  imports: [PersistenceModule, HealthModule, TaskModule],
+  imports: [PersistenceModule, HealthModule, TasksModule],
 })
 export class AppModule {}
