@@ -1,6 +1,6 @@
 import { IImageRepository } from 'src/domain/repositories/image.respository';
 import { Image } from 'src/domain/entities/image.entity';
-import { ImageDocument, ImageModel } from '../schemas/image.schema';
+import { ImageDocument } from '../schemas/image.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -15,7 +15,7 @@ export class ImageRepository implements IImageRepository {
     let imageDoc: ImageDocument | null;
 
     if (image.id) {
-      imageDoc = await ImageModel.findByIdAndUpdate(image.id, image, {
+      imageDoc = await this.imageModel.findByIdAndUpdate(image.id, image, {
         new: true,
       });
       if (!imageDoc) throw new Error('Image not found');
