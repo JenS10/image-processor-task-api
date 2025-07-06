@@ -29,7 +29,7 @@ output/my-image/1024/f3e4a1b5d8c9.jpg
 
 The image output directory and the resolutions used for resizing are defined as constants in the configuration file:
 
-**Path:** `src/config/image.config.ts`
+**Path:** `/src/application/config/image-processing.config.ts`
 
 ```ts
 export const IMAGE_OUTPUT_DIR = 'output';
