@@ -66,9 +66,9 @@ describe('TasksController', () => {
 
     getTaskUseCase.execute.mockResolvedValue(mockResponse);
 
-    const result = await controller.getTask(
-      'a7beec44-99e4-4be1-b305-a2828298ad1c',
-    );
+    const result = await controller.getTask({
+      taskId: 'a7beec44-99e4-4be1-b305-a2828298ad1c',
+    });
 
     expect(result).toEqual(mockResponse);
     expect(getTaskUseCase.execute).toHaveBeenCalledWith(
