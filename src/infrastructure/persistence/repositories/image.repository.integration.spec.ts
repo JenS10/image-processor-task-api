@@ -5,7 +5,7 @@ import { Connection, Types } from 'mongoose';
 import { ImageSchema } from '../schemas/image.schema';
 import { ImageRepository } from './image.repository';
 import { Image } from 'src/domain/entities/image.entity';
-import { IImageRepository } from '../../../domain/repositories/image.respository';
+import { IImageRepository } from 'src/domain/repositories/image.respository';
 
 describe('ImageRepository (Integration)', () => {
   let module: TestingModule;
@@ -58,7 +58,6 @@ describe('ImageRepository (Integration)', () => {
     };
 
     const created = await imageRepository.save(image);
-    console.log('created image ', created);
 
     expect(created).toBeDefined();
     expect(created.id).toBeDefined();

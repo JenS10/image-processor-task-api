@@ -4,8 +4,8 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Connection } from 'mongoose';
 import { TaskSchema } from '../schemas/task.schema';
 import { TaskRepository } from './task.repository';
-import { ITaskRepository } from '../../../domain/repositories/task.repository';
-import { Task, TaskStatus } from '../../../domain/entities/task.entity';
+import { ITaskRepository } from 'src/domain/repositories/task.repository';
+import { Task, TaskStatus } from 'src/domain/entities/task.entity';
 
 describe('TaskRepository (Integration)', () => {
   let module: TestingModule;
@@ -57,7 +57,6 @@ describe('TaskRepository (Integration)', () => {
     };
 
     const created = await taskRepository.create(task);
-    console.log('created task ', created);
 
     expect(created).toBeDefined();
     expect(created.taskId).toBeDefined();
