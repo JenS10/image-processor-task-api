@@ -8,6 +8,7 @@ import { ITaskRepository } from 'src/domain/repositories/task.repository';
 import { Task, TaskStatus } from 'src/domain/entities/task.entity';
 import { IImageRepository } from 'src/domain/repositories/image.respository';
 import { ImageProcessingService } from '../services/image-processing.service';
+import { PriceCalculationService } from '../services/price-calculation.service';
 import * as fs from 'fs';
 
 @Injectable()
@@ -20,6 +21,7 @@ export class CreateTaskUseCase {
     @Inject(IImageRepository)
     private readonly imageRepository: IImageRepository,
     private readonly imageProcessingService: ImageProcessingService,
+    private readonly priceCalculationService: PriceCalculationService,
   ) {}
 
   async execute(path: string): Promise<Task> {
@@ -30,7 +32,7 @@ export class CreateTaskUseCase {
       );
     }
 
-    const price = this.calculatePrice();
+    const price = this.priceCalculationService.calculatePrice();
     const newTask: Task = {
       status: TaskStatus.Pending,
       originalPath: path,
