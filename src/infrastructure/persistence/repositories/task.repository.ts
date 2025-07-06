@@ -17,6 +17,16 @@ export class TaskRepository implements ITaskRepository {
     return this.toDomain(created);
   }
 
+  async update(id: string, task: Task): Promise<Task | null> {
+    const taskDoc = await this.taskModel.findByIdAndUpdate(id, task, {
+      new: true,
+    });
+
+    if (!taskDoc) throw new Error('Taks not found');
+
+    return this.toDomain(taskDoc);
+  }
+
   private toDomain(doc: TaskDocument): Task {
     return {
       taskId: doc._id.toString(),
