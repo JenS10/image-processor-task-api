@@ -1,98 +1,143 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# 📸 Image Processor Task API
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This is an API to process images. It resizes images to 1024px and 800px, and calculates the processing cost.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🚀 What Does This API Do?
 
-## Project setup
+This API lets users create **image processing tasks**. Each task includes an image that is resized to two predefined widths: **1024px** and **800px**.
 
-```bash
-$ npm install
+It also calculates the **processing price** based on the original image dimensions.
+
+🗂️ **The resized images are saved in the following path structure inside the repository:**
+
+```
+output/<imageName>/<resolution>/<md5>.<ext>
 ```
 
-## Compile and run the project
+For example:
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+output/my-image/1024/f3e4a1b5d8c9.jpg
 ```
 
-## Run tests
+---
+
+## 🧑‍💻 Getting Started
+
+### ✅ Requirements
+
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
+
+### 🔧 Setup Steps
+
+1. **Start MongoDB with Docker:**
+
+   Open a terminal in the root folder and run:
+
+   ```bash
+   docker-compose -f docker-compose-mongodb.yml up -d
+   ```
+
+2. **Install project dependencies:**
+
+   In the project root folder, run:
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the application:**
+
+   ```bash
+   npm start
+   ```
+
+   The API will be available at:  
+   [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🛠️ Tech Stack
+
+- **NestJS** – Framework for building scalable Node.js apps
+- **MongoDB** – NoSQL database for storing tasks and images
+- **Mongoose** – ODM for MongoDB integration
+- **Sharp** – Library for image processing
+- **Class-validator & class-transformer** – For validating and transforming DTOs
+- **Jest** – For unit and integration testing
+- **Swagger** – For auto-generating API documentation
+
+---
+
+## 📂 Endpoints
+
+### 🔄 `/tasks` – Task Controller
+
+Manages image processing tasks.
+
+#### `POST /tasks`
+
+- **Description:** Creates a new task and processes the image.
+- **Request Body (JSON):**
+  - `path`: Full path to the original image
+- **Response:** Task object with ID, status, and price
+
+#### `GET /tasks/:id`
+
+- **Description:** Returns the status, price, and image details of a specific task
+- **URL Parameter:**
+  - `id`: Task ID (must be a valid MongoDB ObjectId)
+- **Response:**
+  - If **completed**, returns image paths
+  - If **pending**, returns only status and price
+
+---
+
+### ❤️ `/health` – Health Controller
+
+Checks the API status.
+
+#### `GET /health`
+
+- **Description:** Health check endpoint for monitoring service status
+- **Response:** Returns a JSON object with service status
+
+---
+
+## ✅ Validations
+
+- `POST /tasks` checks that the `path` points to a valid image
+- `GET /tasks/:id` checks that the `id` is a valid MongoDB ObjectId
+
+---
+
+## 🧪 Testing
+
+This project includes:
+
+- **Unit tests (`*.spec.ts`)** – Test business logic in isolation
+- **Integration tests (`*.integration.spec.ts`)** – Test database interactions
+
+Run tests with:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run test
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 📖 API Documentation (Swagger)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+After starting the app, visit:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+[http://localhost:3000/api](http://localhost:3000/api)
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+to view the full Swagger-generated documentation.
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
