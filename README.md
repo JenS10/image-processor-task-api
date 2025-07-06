@@ -14,14 +14,29 @@ It also calculates the **processing price** based on the original image dimensio
 🗂️ **The resized images are saved in the following path structure inside the repository:**
 
 ```
-output/<imageName>/<resolution>/<md5>.<ext>
+<outputDir>/<imageName>/<resolution>/<md5>.<ext>
 ```
 
-For example:
+### Example:
 
 ```
 output/my-image/1024/f3e4a1b5d8c9.jpg
 ```
+
+---
+
+## 🔧 Configuration
+
+The image output directory and the resolutions used for resizing are defined as constants in the configuration file:
+
+**Path:** `src/config/image.config.ts`
+
+```ts
+export const IMAGE_OUTPUT_DIR = 'output';
+export const IMAGE_RESOLUTIONS = [1024, 800];
+```
+
+You can change these values if you want to use a different folder for output or different target resolutions for the resized images.
 
 ---
 
