@@ -4,12 +4,15 @@ import * as sharp from 'sharp';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
+import {
+  IMAGE_OUTPUT_DIR,
+  IMAGE_RESOLUTIONS,
+} from '../config/image-processing.config';
 
 @Injectable()
 export class ImageProcessingService {
   async processImage(originalPath: string, taskId: string): Promise<Image[]> {
-    const resolutions = [1024, 800];
-    const outputBaseDir = path.join(process.cwd(), 'output');
+    const outputBaseDir = path.join(process.cwd(), IMAGE_OUTPUT_DIR);
     const originalExtension = path.extname(originalPath);
     const originalFileName = path.basename(originalPath, originalExtension);
 
@@ -21,7 +24,7 @@ export class ImageProcessingService {
     const md5Hash = crypto.createHash('md5').update(fileBuffer).digest('hex');
     const processedImages: Image[] = [];
 
-    for (const resolution of resolutions) {
+    for (const resolution of IMAGE_RESOLUTIONS) {
       const outputDir = path.join(
         outputBaseDir,
         originalFileName,
