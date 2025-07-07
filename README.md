@@ -27,6 +27,7 @@ output/my-image/1024/f3e4a1b5d8c9.jpg
 
 ## 🔧 Configuration
 
+By default, the images are stored in the root directory inside the 'output' folder.
 The image output directory and the resolutions used for resizing are defined as constants in the configuration file:
 
 **Path:** `/src/application/config/image-processing.config.ts`
@@ -37,6 +38,10 @@ export const IMAGE_RESOLUTIONS = [1024, 800];
 ```
 
 You can change these values if you want to use a different folder for output or different target resolutions for the resized images.
+
+
+
+
 
 ---
 
@@ -56,7 +61,7 @@ You can change these values if you want to use a different folder for output or 
    Open a terminal in the root folder and run:
 
    ```bash
-   docker-compose -f docker-compose-mongodb.yml up -d
+   docker-compose -f docker-compose-mongo.yml up -d
    ```
 
 2. **Install project dependencies:**
@@ -151,7 +156,7 @@ npm run test
 
 After starting the app, visit:
 
-[http://localhost:3000/api](http://localhost:3000/api)
+[http://localhost:3000/docs](http://localhost:3000/docs)
 
 to view the full Swagger-generated documentation.
 
