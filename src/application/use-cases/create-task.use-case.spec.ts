@@ -5,9 +5,7 @@ import { ITaskRepository } from 'src/domain/repositories/task.repository';
 import { IImageRepository } from 'src/domain/repositories/image.respository';
 import { ImageProcessingService } from '../services/image-processing.service';
 import { PriceCalculationService } from '../services/price-calculation.service';
-import * as fs from 'fs';
-
-jest.mock('fs');
+import { Image } from 'src/domain/entities/image.entity';
 
 describe('CreateTaskUseCase', () => {
   let useCase: CreateTaskUseCase;
@@ -23,15 +21,15 @@ describe('CreateTaskUseCase', () => {
     originalPath: 'path/to/image.jpg',
   };
 
-  const imagesMock = [
+  const imagesMock: Image[] = [
     {
-      taskId: taskMock.taskId,
+      taskId: taskMock.taskId!,
       path: 'output/path1.jpg',
       resolution: '1024',
       md5: 'hash1',
     },
     {
-      taskId: taskMock.taskId,
+      taskId: taskMock.taskId!,
       path: 'output/path2.jpg',
       resolution: '800',
       md5: 'hash2',
@@ -53,13 +51,11 @@ describe('CreateTaskUseCase', () => {
 
     imageProcessingService = {
       processImage: jest.fn().mockResolvedValue(imagesMock),
-    } as jest.Mocked<ImageProcessingService>;
+    } as unknown as jest.Mocked<ImageProcessingService>;
 
     priceCalculationService = {
       calculatePrice: jest.fn().mockReturnValue(10.5),
     } as jest.Mocked<PriceCalculationService>;
-
-    (fs.existsSync as jest.Mock).mockReturnValue(true);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -74,19 +70,11 @@ describe('CreateTaskUseCase', () => {
     useCase = module.get(CreateTaskUseCase);
   });
 
-  it('should throw BadRequestException if image path does not exist', async () => {
-    (fs.existsSync as jest.Mock).mockReturnValue(false);
-
-    await expect(useCase.execute('invalid/path.jpg')).rejects.toThrow(
-      'Image file at path "invalid/path.jpg" does not exist',
-    );
-
-    expect(priceCalculationService.calculatePrice).not.toHaveBeenCalled();
-    expect(taskRepository.create).not.toHaveBeenCalled();
-  });
-
-  it('should create task, process images and update task status', async () => {
+  it('should create task and process images', async () => {
     const result = await useCase.execute('path/to/image.jpg');
+
+    // Wait a tick to allow setImmediate to run
+    await new Promise((resolve) => setImmediate(resolve));
 
     expect(priceCalculationService.calculatePrice).toHaveBeenCalled();
     expect(taskRepository.create).toHaveBeenCalledWith(
@@ -101,8 +89,8 @@ describe('CreateTaskUseCase', () => {
       'path/to/image.jpg',
       taskMock.taskId,
     );
-    expect(imageRepository.save).toHaveBeenCalledTimes(imagesMock.length);
 
+    expect(imageRepository.save).toHaveBeenCalledTimes(imagesMock.length);
     expect(taskRepository.update).toHaveBeenCalledWith(
       taskMock.taskId,
       expect.objectContaining({
@@ -120,6 +108,8 @@ describe('CreateTaskUseCase', () => {
     );
 
     await useCase.execute('path/to/image.jpg');
+
+    await new Promise((resolve) => setImmediate(resolve));
 
     expect(taskRepository.update).toHaveBeenCalledWith(
       taskMock.taskId,

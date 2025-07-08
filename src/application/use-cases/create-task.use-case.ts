@@ -1,15 +1,9 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ITaskRepository } from 'src/domain/repositories/task.repository';
 import { Task, TaskStatus } from 'src/domain/entities/task.entity';
 import { IImageRepository } from 'src/domain/repositories/image.respository';
 import { ImageProcessingService } from '../services/image-processing.service';
 import { PriceCalculationService } from '../services/price-calculation.service';
-import * as fs from 'fs';
 
 @Injectable()
 export class CreateTaskUseCase {
@@ -25,13 +19,6 @@ export class CreateTaskUseCase {
   ) {}
 
   async execute(path: string): Promise<Task> {
-    if (!fs.existsSync(path)) {
-      this.logger.error(`-- Image file at path "${path}" does not exist --`);
-      throw new BadRequestException(
-        `Image file at path "${path}" does not exist`,
-      );
-    }
-
     const price = this.priceCalculationService.calculatePrice();
     const newTask: Task = {
       status: TaskStatus.Pending,
@@ -41,7 +28,15 @@ export class CreateTaskUseCase {
     const createdTask = await this.taskRepository.create(newTask);
 
     if (createdTask && createdTask.taskId) {
-      await this.processImage(createdTask);
+      setImmediate(() => {
+        this.processImage(createdTask).catch((error) => {
+          const err = error as Error;
+          this.logger.error(
+            `Error processing image for task ${createdTask.taskId}: ${err.message}`,
+            err.stack,
+          );
+        });
+      });
     } else {
       this.logger.error(
         `-- Task creation failed or is missing -- ${JSON.stringify(createdTask, null, 2)}`,
