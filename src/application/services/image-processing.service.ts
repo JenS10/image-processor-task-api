@@ -38,7 +38,7 @@ export class ImageProcessingService {
 
     if (isRemote) {
       try {
-        this.logger.log(`Downloading remote image from: ${originalpath}`);
+        this.logger.log(`-- Downloading remote image from: ${originalpath} --`);
         const response = await axios.get(originalpath, {
           responseType: 'arraybuffer',
         });
@@ -48,17 +48,17 @@ export class ImageProcessingService {
           const status = error.response?.status;
           if (status === 404) {
             this.logger.error(
-              `The image from ${originalpath} is not found (404)`,
+              `-- The image from ${originalpath} is not found (404) --`,
             );
             throw new BadRequestException(
-              `The image from not ${originalpath} found (404)`,
+              `-- The image from not ${originalpath} found (404) --`,
             );
           }
           this.logger.error(
-            `Failed to download image, status: ${status || 'unknown'}`,
+            `-- Failed to download image, status: ${status || 'unknown'} --`,
           );
           throw new BadRequestException(
-            `Failed to download remote image: ${originalpath}`,
+            `-- Failed to download remote image: ${originalpath} --`,
           );
         }
       }
@@ -74,7 +74,7 @@ export class ImageProcessingService {
         );
       }
 
-      this.logger.log(`Copying local image from: ${originalpath}`);
+      this.logger.log(`-- Copying local image from: ${originalpath} --`);
       await copyFile(originalpath, originalImagePath);
     }
 
@@ -92,10 +92,10 @@ export class ImageProcessingService {
       const outputPath = path.join(resolutionDir, outputFileName);
 
       try {
-        await access(outputPath, constants.F_OK); // File already exists
-        this.logger.log(`Image already resized at: ${outputPath}`);
+        await access(outputPath, constants.F_OK); 
+        this.logger.log(`-- Image already resized at: ${outputPath} --`);
       } catch {
-        this.logger.log(`Resizing image to ${resolution}px`);
+        this.logger.log(`-- Resizing image to ${resolution}px --`);
         await sharp(originalImagePath).resize(resolution).toFile(outputPath);
       }
 

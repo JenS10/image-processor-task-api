@@ -32,7 +32,7 @@ export class CreateTaskUseCase {
         this.processImage(createdTask).catch((error) => {
           const err = error as Error;
           this.logger.error(
-            `Error processing image for task ${createdTask.taskId}: ${err.message}`,
+            `-- Error processing image for task ${createdTask.taskId}: ${err.message} --`,
             err.stack,
           );
         });
@@ -63,7 +63,7 @@ export class CreateTaskUseCase {
     } catch (error) {
       const err = error as Error;
       this.logger.error(
-        `Error processing image for task ${task.taskId}: ${err.message}`,
+        `-- Error processing image for task ${task.taskId}: ${err.message} --`,
         err.stack,
       );
 
